@@ -164,6 +164,7 @@ export default class Video extends Component {
     if (uri && uri.match(/^\//)) {
       uri = `file://${uri}`;
     }
+    let customData = this.props.customData || '';
 
     const isNetwork = !!(uri && uri.match(/^https?:/));
     const isAsset = !!(uri && uri.match(/^(assets-library|file|content|ms-appx|ms-appdata):/));
@@ -187,6 +188,7 @@ export default class Video extends Component {
         uri,
         isNetwork,
         isAsset,
+        customData,
         type: source.type || '',
         mainVer: source.mainVer || 0,
         patchVer: source.patchVer || 0,
