@@ -61,7 +61,7 @@ NSString* const URL_SCHEME_NAME = @"skd";
     
     // This needs to be implemented to conform to your protocol with the backend/key security module.
     // At a high level, this function gets the application certificate from the server in DER format.
-    NSString *certificateUrl = @"http://fp-keyos.licensekeyserver.com/getkey";
+    NSString *certificateUrl = @"http://fp-keyos.licensekeyserver.com/cert/14cce13d14ec642d321d3345b850d8cc.der";
     NSURLRequest *certRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:certificateUrl]];
     NSHTTPURLResponse *certResponse = nil;
     NSError *certError = nil;
