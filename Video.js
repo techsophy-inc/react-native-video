@@ -164,7 +164,7 @@ export default class Video extends Component {
     if (uri && uri.match(/^\//)) {
       uri = `file://${uri}`;
     }
-    let customData = this.props.drmHeader || '';
+    let customData = this.props.drmHeader ? (this.props.drmHeader.customdata || '' ) : '';
 
     const isNetwork = !!(uri && uri.match(/^https?:/));
     const isAsset = !!(uri && uri.match(/^(assets-library|file|content|ms-appx|ms-appdata):/));
