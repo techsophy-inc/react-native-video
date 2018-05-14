@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {StyleSheet, requireNativeComponent, NativeModules, View, ViewPropTypes, Image} from 'react-native';
+import React, {Component, PropTypes} from 'react';
+import {StyleSheet, requireNativeComponent, NativeModules, View, Image} from 'react-native';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 import VideoResizeMode from './VideoResizeMode.js';
 
@@ -283,7 +282,6 @@ Video.propTypes = {
   drmHeader: PropTypes.object,
   playInBackground: PropTypes.bool,
   playWhenInactive: PropTypes.bool,
-  ignoreSilentSwitch: PropTypes.oneOf(['ignore', 'obey']),
   disableFocus: PropTypes.bool,
   controls: PropTypes.bool,
   currentTime: PropTypes.number,
@@ -312,7 +310,7 @@ Video.propTypes = {
   translateX: PropTypes.number,
   translateY: PropTypes.number,
   rotation: PropTypes.number,
-  ...ViewPropTypes,
+  ...View.propTypes,
 };
 
 const RCTVideo = requireNativeComponent('RCTVideo', Video, {
