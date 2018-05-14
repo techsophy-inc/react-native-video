@@ -106,33 +106,33 @@ NSString* const URL_SCHEME_NAME = @"skd";
   
   // Send the SPC message to the Key Server.
   responseData = [self getContentKeyAndLeaseExpiryfromKeyServerModuleWithRequest:requestBytes
-                                                            contentIdentifierHost:assetStr
-                                                              leaseExpiryDuration:&expiryDuration
-                                                                            error:&error];
+                                                           contentIdentifierHost:assetStr
+                                                             leaseExpiryDuration:&expiryDuration
+                                                                           error:&error];
   
   // The Key Server returns the CK inside an encrypted Content Key Context (CKC) message in response to
   // the app’s SPC message.  This CKC message, containing the CK, was constructed from the SPC by a
   // Key Security Module in the Key Server’s software.
   if (responseData != nil) {
       
-      // Provide the CKC message (containing the CK) to the loading request.
-      [dataRequest respondWithData:[[NSData alloc] initWithBase64EncodedData:responseData options:0]];
-      
-      // Get the CK expiration time from the CKC. This is used to enforce the expiration of the CK.
-      if (expiryDuration != 0.0) {
-          
-          AVAssetResourceLoadingContentInformationRequest *infoRequest = loadingRequest.contentInformationRequest;
-          if (infoRequest) {
-              infoRequest.renewalDate = [NSDate dateWithTimeIntervalSinceNow:expiryDuration];
-              infoRequest.contentType = @"application/octet-stream";
-              infoRequest.contentLength = responseData.length;
-              infoRequest.byteRangeAccessSupported = NO;
-          }
+    // Provide the CKC message (containing the CK) to the loading request.
+    [dataRequest respondWithData:[[NSData alloc] initWithBase64EncodedData:responseData options:0]];
+    
+    // Get the CK expiration time from the CKC. This is used to enforce the expiration of the CK.
+    if (expiryDuration != 0.0) {
+        
+      AVAssetResourceLoadingContentInformationRequest *infoRequest = loadingRequest.contentInformationRequest;
+      if (infoRequest) {
+        infoRequest.renewalDate = [NSDate dateWithTimeIntervalSinceNow:expiryDuration];
+        infoRequest.contentType = @"application/octet-stream";
+        infoRequest.contentLength = responseData.length;
+        infoRequest.byteRangeAccessSupported = NO;
       }
-      [loadingRequest finishLoading]; // Treat the processing of the request as complete.
+    }
+    [loadingRequest finishLoading]; // Treat the processing of the request as complete.
   }
   else {
-      [loadingRequest finishLoadingWithError:error];
+    [loadingRequest finishLoadingWithError:error];
   }
   
   handled = YES;    // Request has been handled regardless of whether server returned an error.

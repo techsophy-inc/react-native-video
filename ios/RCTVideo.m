@@ -21,7 +21,7 @@ static NSString *const timedMetadata = @"timedMetadata";
   AVPlayerLayer *_playerLayer;
   AVPlayerViewController *_playerViewController;
   NSURL *_videoURL;
-	AssetLoaderDelegate  *_loaderDelegate;
+  AssetLoaderDelegate  *_loaderDelegate;
 
   /* Required to publish events */
   RCTEventDispatcher *_eventDispatcher;
@@ -70,7 +70,7 @@ static NSString *const timedMetadata = @"timedMetadata";
     _playInBackground = false;
     _playWhenInactive = false;
     _ignoreSilentSwitch = @"inherit"; // inherit, ignore, obey
-      
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillResignActive:)
                                                  name:UIApplicationWillResignActiveNotification
@@ -316,40 +316,40 @@ static NSString *const timedMetadata = @"timedMetadata";
 
 - (AVPlayerItem*)playerItemForSource:(NSDictionary *)source
 {
-	bool isNetwork = [RCTConvert BOOL:[source objectForKey:@"isNetwork"]];
-	bool isAsset = [RCTConvert BOOL:[source objectForKey:@"isAsset"]];
+  bool isNetwork = [RCTConvert BOOL:[source objectForKey:@"isNetwork"]];
+  bool isAsset = [RCTConvert BOOL:[source objectForKey:@"isAsset"]];
   NSString *uri = [source objectForKey:@"uri"];
-	NSString *type = [source objectForKey:@"type"];
+  NSString *type = [source objectForKey:@"type"];
 
-	NSURL *url = (isNetwork || isAsset) ?
-		[NSURL URLWithString:uri] :
-		[[NSURL alloc] initFileURLWithPath:[[NSBundle mainBundle] pathForResource:uri ofType:type]];
+  NSURL *url = (isNetwork || isAsset) ?
+    [NSURL URLWithString:uri] :
+    [[NSURL alloc] initFileURLWithPath:[[NSBundle mainBundle] pathForResource:uri ofType:type]];
 
-	if (isNetwork) {
-		NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
-		AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:@{AVURLAssetHTTPCookiesKey : cookies}];
-		[self setAssetLoaderDelegate:source forAsset:asset];
-		return [AVPlayerItem playerItemWithAsset:asset];
-		}
-		else if (isAsset) {
-			AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-			[self setAssetLoaderDelegate:source forAsset:asset];
-			return [AVPlayerItem playerItemWithAsset:asset];
-    }
+  if (isNetwork) {
+    NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:@{AVURLAssetHTTPCookiesKey : cookies}];
+    [self setAssetLoaderDelegate:source forAsset:asset];
+    return [AVPlayerItem playerItemWithAsset:asset];
+  }
+  else if (isAsset) {
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+    [self setAssetLoaderDelegate:source forAsset:asset];
+    return [AVPlayerItem playerItemWithAsset:asset];
+  }
     
-    return [AVPlayerItem playerItemWithURL:url];
+  return [AVPlayerItem playerItemWithURL:url];
 }
 
 - (void)setAssetLoaderDelegate:(NSDictionary *)source forAsset: (AVURLAsset *)asset
 {
-	NSDictionary *data = [source objectForKey:@"drmHeader"];
+  NSDictionary *data = [source objectForKey:@"drmHeader"];
   NSString *customData = @"";
-	if ([data objectForKey:@"customdata"]) {
-		customData = [data objectForKey:@"customdata"];
-		_loaderDelegate = [[AssetLoaderDelegate alloc] init];
-		[_loaderDelegate setCustomData: customData];
-		[[asset resourceLoader] setDelegate:_loaderDelegate queue:dispatch_get_main_queue()];
-	}
+  if ([data objectForKey:@"customdata"]) {
+    customData = [data objectForKey:@"customdata"];
+    _loaderDelegate = [[AssetLoaderDelegate alloc] init];
+    [_loaderDelegate setCustomData: customData];
+    [[asset resourceLoader] setDelegate:_loaderDelegate queue:dispatch_get_main_queue()];
+  }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -843,7 +843,7 @@ static NSString *const timedMetadata = @"timedMetadata";
     _playbackRateObserverRegistered = NO;
   }
   _player = nil;
-	_loaderDelegate = nil;
+  _loaderDelegate = nil;
 
   [self removePlayerLayer];
 
