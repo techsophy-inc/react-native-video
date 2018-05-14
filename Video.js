@@ -187,6 +187,7 @@ export default class Video extends Component {
         uri,
         isNetwork,
         isAsset,
+        drmHeader: this.props.drmHeader,
         type: source.type || '',
         mainVer: source.mainVer || 0,
         patchVer: source.patchVer || 0,
