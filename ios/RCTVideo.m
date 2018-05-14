@@ -336,7 +336,7 @@ static NSString *const timedMetadata = @"timedMetadata";
     [self setAssetLoaderDelegate:source forAsset:asset];
     return [AVPlayerItem playerItemWithAsset:asset];
   }
-    
+
   return [AVPlayerItem playerItemWithURL:url];
 }
 
