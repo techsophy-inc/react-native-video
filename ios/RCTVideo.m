@@ -3,6 +3,7 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventDispatcher.h>
 #import <React/UIView+React.h>
+#import "AssetLoaderDelegate.h"
 
 static NSString *const statusKeyPath = @"status";
 static NSString *const playbackLikelyToKeepUpKeyPath = @"playbackLikelyToKeepUp";
@@ -20,6 +21,7 @@ static NSString *const timedMetadata = @"timedMetadata";
   AVPlayerLayer *_playerLayer;
   AVPlayerViewController *_playerViewController;
   NSURL *_videoURL;
+  AssetLoaderDelegate  *_loaderDelegate;
 
   /* Required to publish events */
   RCTEventDispatcher *_eventDispatcher;
@@ -326,14 +328,28 @@ static NSString *const timedMetadata = @"timedMetadata";
   if (isNetwork) {
     NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:@{AVURLAssetHTTPCookiesKey : cookies}];
+    [self setAssetLoaderDelegate:source forAsset:asset];
     return [AVPlayerItem playerItemWithAsset:asset];
   }
   else if (isAsset) {
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+    [self setAssetLoaderDelegate:source forAsset:asset];
     return [AVPlayerItem playerItemWithAsset:asset];
   }
 
   return [AVPlayerItem playerItemWithURL:url];
+}
+
+- (void)setAssetLoaderDelegate:(NSDictionary *)source forAsset: (AVURLAsset *)asset
+{
+  NSDictionary *data = [source objectForKey:@"drmHeader"];
+  NSString *customData = @"";
+  if ([data objectForKey:@"customdata"]) {
+    customData = [data objectForKey:@"customdata"];
+    _loaderDelegate = [[AssetLoaderDelegate alloc] init];
+    [_loaderDelegate setCustomData: customData];
+    [[asset resourceLoader] setDelegate:_loaderDelegate queue:dispatch_get_main_queue()];
+  }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -827,6 +843,7 @@ static NSString *const timedMetadata = @"timedMetadata";
     _playbackRateObserverRegistered = NO;
   }
   _player = nil;
+  _loaderDelegate = nil;
 
   [self removePlayerLayer];
 
